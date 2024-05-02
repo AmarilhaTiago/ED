@@ -6,77 +6,76 @@
 #define SEED    0x12345678
 #include "./include/libhash.h"
 
-uint32_t hashf(const char* str, uint32_t h){
-    for (; *str; ++str) {
-        h ^= *str;
-        h *= 0x5bd1e995;
-        h ^= h >> 15;
-    }
-    return h;
+
+int firstHash(int key, thash h){
+    return key % h.max;
 }
 
-int hash_duplo(thash *hash, int i, const char *key){
-    int firstHash = hashf(key, SEED) % hash->max;
-    int secondHash = (hashf(key, SEED) % (hash->max - 1)) + 1;
-    return abs((firstHash + i*secondHash) % hash->max);
+int secondHash(int key, thash h){
+    return 1 + (key % (h.max - 1));
 }
 
-int insere_cidade(thash * h, void * bucket){
+int hash_duplo(thash *hash, int i, int key){
+    return (firstHash(key, *hash) + i * secondHash(key, *hash)) % hash->max;
+}
+
+int insere_cidade(thash *h, tmunicipio bucket){
     int i = 0;
-    int hash = hashf(h->get_key(bucket), SEED);
-    int pos = hash %(h->max);
-    /*se esta cheio*/
-    printf("entrei na insere\n");
+    int pos = hash_duplo(h, i, bucket.codigo_ibge);
+
     if (h->max == (h->size+1)){
-        printf("entrei no if\n");
-        free(bucket);
         return EXIT_FAILURE;
-    }else{  /*fazer a insercao*/
-    printf("entrei no else\n");
-        while(h->municipios[pos] != 0){
-            printf("entrei no while\n");
-            if (h->municipios[pos] == h->deleted)
-                break;
-            pos = hash_duplo(h, ++i, bucket);
+    }else{
+        while(h->municipios[pos].codigo_ibge != 0){
+            pos = hash_duplo(h,++i,bucket.codigo_ibge);
         }
-        h->municipios[pos] = (uintptr_t)bucket;
+        h->municipios[pos] = bucket;
         h->size +=1;
-        printf("inseri\n");
     }
     return EXIT_SUCCESS;
 }
 
 
 
-int constroi_hash(thash * h,int nbuckets, char * (*get_key)(void *) ){
-    h->municipios = calloc(nbuckets + 1, sizeof(void *));
+int constroi_hash(thash * h,int nbuckets){
+    h->municipios = (tmunicipio *)calloc(nbuckets, sizeof(tmunicipio));
     if (h->municipios == NULL){
         return EXIT_FAILURE;
     }
-    h->max = nbuckets + 1;
+    h->max = nbuckets;
     h->size = 0;
-    h->deleted = (uintptr_t)&(h->size);
-    h->get_key = get_key;
     return EXIT_SUCCESS;
 }
 
-
-void * busca_ibge(thash  h, const char * key){
+tmunicipio * busca_ibge(thash *h, int key){
     int i = 0;
-    int pos = hashf(key, SEED) % (h.max);
-    void * ret = NULL;
-    while(h.municipios[pos]!=0 && ret == NULL){
-        if (strcmp(h.get_key((void*)h.municipios[pos]),key) == 0){
-            ret = (void *) h.municipios[pos];
+    int pos = hash_duplo(h, i, key);
+    tmunicipio * ret = NULL;
+    while(h->municipios[pos].codigo_ibge != 0 && ret == NULL){
+        if (h->municipios[pos].codigo_ibge == key){
+            ret = &(h->municipios[pos]);
         }else{
-            pos = hash_duplo(&h, ++i, key);
+            pos = hash_duplo(h, ++i, key);
         }
     }
     return ret;
-
 }
+
+//precisa fzer ainda
+// tmunicipio * busca_nome(thash *h, char * key){
+//     int i = 0;
+//     int pos = hash_duplo(h, i, key);
+//     tmunicipio * ret = NULL;
+//     while(h->municipios[pos].codigo_ibge != 0 && ret == NULL){
+//         if (strcmp(h->municipios[pos].nome, key) == 0){
+//             ret = &(h->municipios[pos]);
+//         }else{
+//             pos = hash_duplo(h, ++i, key);
+//         }
+//     }
+//     return ret;
+// }
 
 void apaga_hash(thash *h){
     free(h->municipios);
-    free(h);
 }
