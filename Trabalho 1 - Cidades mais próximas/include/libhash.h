@@ -53,8 +53,14 @@ tmunicipio * busca_ibge(thash *h, int key);
 void apaga_hash(thash *h);
 void insere_arvore(tnode **node, tmunicipio municipio, int i);
 void constroi_arvore(tarvore *arvore);
-void liberar_arvore(tnode *node);
-void liberar_heap(theap *heap);
+void libera_arvore(tnode *node);
+int pai(int n);
+int filho_esq(int n);
+int filho_dir(int n);
+void constroi_heap(theap *heap, int max);
+void libera_heap(theap *heap);
+
+
 
 
 #endif

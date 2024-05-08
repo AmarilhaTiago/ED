@@ -43,6 +43,3 @@ void libera_arvore(tnode *node){
     }
 }
 
-void libera_heap(theap *heap){
-    free(heap);
-}
