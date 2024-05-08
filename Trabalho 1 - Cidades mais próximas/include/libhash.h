@@ -21,6 +21,29 @@
          int max;
     }thash;
 
+    typedef struct _node{
+        tmunicipio municipio;
+        struct _node *esq;
+        struct _node *dir;
+        int h;
+    }tnode;
+
+    typedef struct _tree{
+        tnode *raiz;    
+    }tarvore;
+
+    typedef struct{
+        tmunicipio municipio;
+        double distance;
+    }tvizinho;
+
+    typedef struct{
+        tvizinho *vizinhos;
+        int tam;
+        int max;
+    }theap;
+
+
 int firstHash(int key, thash h);
 int secondHash(int key, thash h);
 int hash_duplo(thash *hash, int i, int key);
@@ -28,6 +51,10 @@ int insere_cidade(thash *h, tmunicipio bucket);
 int constroi_hash(thash * h,int nbuckets);
 tmunicipio * busca_ibge(thash *h, int key);
 void apaga_hash(thash *h);
+void insere_arvore(tnode **node, tmunicipio municipio, int i);
+void constroi_arvore(tarvore *arvore);
+void liberar_arvore(tnode *node);
+void liberar_heap(theap *heap);
 
 
 #endif

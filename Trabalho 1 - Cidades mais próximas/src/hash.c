@@ -3,8 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#define SEED    0x12345678
-#include "./include/libhash.h"
+#include "../include/libhash.h"
 
 
 int firstHash(int key, thash h){
