@@ -20,7 +20,46 @@ void libera_heap(theap *heap){
 }
 
 void constroi_heap(theap *heap, int max){
-    heap->vizinhos = (tvizinho *)calloc(max, sizeof(tvizinho));
+    heap->vizinhos = (tvizinho *)malloc(max * sizeof(tvizinho));
     heap->tam = 0;
     heap->max = max;
+}
+
+void desce(theap *heap, int n){
+    int maior = n;
+    int direita = filho_dir(n);
+    int esquerda = filho_esq(n);
+
+    if(heap->vizinhos[maior].distance < heap->vizinhos[direita].distance && direita < heap->tam){
+        maior = direita;
+    }
+    if(heap->vizinhos[maior].distance < heap->vizinhos[esquerda].distance && esquerda < heap->tam){
+        maior = esquerda;
+    }
+    if(maior != n){
+        troca(&heap->vizinhos[maior], &heap->vizinhos[n]);
+        desce(heap, maior);
+    }
+}
+
+void sobe(theap *heap, int n){
+    int pos_pai = pai(n);
+    if(heap->vizinhos->distance > heap->vizinhos[pos_pai].distance){
+        troca(&heap->vizinhos[n], &heap->vizinhos[pos_pai]);
+        sobe(heap->vizinhos, pos_pai);
+    }
+}
+
+void troca(tvizinho *a, tvizinho *b){
+    tvizinho aux = *a;
+    *a = *b;
+    *b = aux;
+}
+
+void heap_sort(theap *heap){
+    for(int i = heap->tam - 1; i > 0; i--){
+        troca(&heap->vizinhos[0], &heap->vizinhos[i]);
+        heap->tam--;
+        desce(heap, 0);
+    }
 }

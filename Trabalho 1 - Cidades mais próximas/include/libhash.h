@@ -25,7 +25,6 @@
         tmunicipio municipio;
         struct _node *esq;
         struct _node *dir;
-        int h;
     }tnode;
 
     typedef struct _tree{
@@ -57,8 +56,12 @@ void libera_arvore(tnode *node);
 int pai(int n);
 int filho_esq(int n);
 int filho_dir(int n);
-void constroi_heap(theap *heap, int max);
 void libera_heap(theap *heap);
+void constroi_heap(theap *heap, int max);
+void desce(theap *heap, int n);
+void sobe(theap *heap, int n);
+void troca(tvizinho *a, tvizinho *b);
+void heap_sort(theap *heap);
 
 
 
