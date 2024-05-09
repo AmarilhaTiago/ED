@@ -49,6 +49,7 @@ int hash_duplo(thash *hash, int i, int key);
 int insere_cidade(thash *h, tmunicipio bucket);
 int constroi_hash(thash * h,int nbuckets);
 tmunicipio * busca_ibge(thash *h, int key);
+tmunicipio * busca_nome(thash *h, char *nome);
 void apaga_hash(thash *h);
 void insere_arvore(tnode **node, tmunicipio municipio, int i);
 void constroi_arvore(tarvore *arvore);

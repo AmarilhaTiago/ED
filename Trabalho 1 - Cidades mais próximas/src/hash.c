@@ -44,8 +44,6 @@ int insere_cidade(thash *h, tmunicipio bucket){
     return EXIT_SUCCESS;
 }
 
-
-
 int constroi_hash(thash * h,int nbuckets){
     h->municipios = (tmunicipio *)calloc(nbuckets, sizeof(tmunicipio));
     if (h->municipios == NULL){
@@ -70,7 +68,7 @@ tmunicipio * busca_ibge(thash *h, int key){
     return ret;
 }
 
-tmunicipio * busca_nome(thash *h, char *nome, int *tam){
+tmunicipio * busca_nome(thash *h, char *nome){
     int i = 0;
     int j = 0;
     int pos = hash_duplo(h, i, string_int(nome));
@@ -80,7 +78,6 @@ tmunicipio * busca_nome(thash *h, char *nome, int *tam){
         if(strcmp(h->municipios[pos].nome, nome) == 0){
             municipio = &h->municipios[pos];  
             retorno[j++] = &h->municipios[pos];
-            tam++;
         }
         pos = hash_duplo(h, ++i, string_int(nome));
     }
@@ -90,14 +87,19 @@ tmunicipio * busca_nome(thash *h, char *nome, int *tam){
     }else if(j == 1){
         return municipio;
     }else if(j > 1){
-        //recorrer a leitura interna caso eu apanhe para ler na main
-        // printf("Foram encontradas %d cidades com o nome %s\n", j, nome);
-        // for(int i = 0; i < j; i++){
-        //     printf("%d - %s\n", retorno[i]->codigo_ibge, retorno[i]->nome);
-        // }
-        // //ler
-        // return NULL;
-        return retorno;
+
+        printf("Foram encontradas %d cidades com o nome %s\n", j, nome);
+        printf("Opções:\n");
+        for(int i = 0; i < j; i++){
+            printf("%d: %s - DDD: %d\n", i + 1, retorno[i]->nome, retorno[i]->ddd);
+        }
+        printf("Escolha uma opção: ");
+        int x = scanf("%d", &x);
+        if(x > j || x < 1){
+            printf("Opção inválida\n");
+            return NULL;
+        }
+        return retorno[x - 1];
     }
 }
 

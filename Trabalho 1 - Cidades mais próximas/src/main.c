@@ -105,9 +105,8 @@ void menu_opcoes(thash h)
         case 2:
             printf("Digite o nome do municipio: ");
             char nome[50];
-            int tam = 0;
             scanf("%s", nome);
-            busca_nome(&h, nome, &tam);
+            busca_nome(&h, nome);
             
             break;
         case 3:
