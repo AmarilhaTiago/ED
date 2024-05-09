@@ -3,8 +3,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <math.h>
 #include "../include/libhash.h"
 
+
+int string_int(char *str) {
+    int hash = 0;
+    while (*str) {
+        hash += *str;
+        str++;
+    }
+    return hash;
+}
 
 int firstHash(int key, thash h){
     return key % h.max;
@@ -60,20 +70,36 @@ tmunicipio * busca_ibge(thash *h, int key){
     return ret;
 }
 
-//precisa fzer ainda
-// tmunicipio * busca_nome(thash *h, char * key){
-//     int i = 0;
-//     int pos = hash_duplo(h, i, key);
-//     tmunicipio * ret = NULL;
-//     while(h->municipios[pos].codigo_ibge != 0 && ret == NULL){
-//         if (strcmp(h->municipios[pos].nome, key) == 0){
-//             ret = &(h->municipios[pos]);
-//         }else{
-//             pos = hash_duplo(h, ++i, key);
-//         }
-//     }
-//     return ret;
-// }
+tmunicipio * busca_nome(thash *h, char *nome, int *tam){
+    int i = 0;
+    int j = 0;
+    int pos = hash_duplo(h, i, string_int(nome));
+    tmunicipio **retorno = malloc(sizeof(tmunicipio *) * 7);
+    tmunicipio *municipio = NULL;  
+    while(h->municipios[pos].codigo_ibge != 0){
+        if(strcmp(h->municipios[pos].nome, nome) == 0){
+            municipio = &h->municipios[pos];  
+            retorno[j++] = &h->municipios[pos];
+            tam++;
+        }
+        pos = hash_duplo(h, ++i, string_int(nome));
+    }
+    if(municipio == NULL){
+        printf("Cidade não encontrada\n");
+        return NULL;
+    }else if(j == 1){
+        return municipio;
+    }else if(j > 1){
+        //recorrer a leitura interna caso eu apanhe para ler na main
+        // printf("Foram encontradas %d cidades com o nome %s\n", j, nome);
+        // for(int i = 0; i < j; i++){
+        //     printf("%d - %s\n", retorno[i]->codigo_ibge, retorno[i]->nome);
+        // }
+        // //ler
+        // return NULL;
+        return retorno;
+    }
+}
 
 void apaga_hash(thash *h){
     free(h->municipios);

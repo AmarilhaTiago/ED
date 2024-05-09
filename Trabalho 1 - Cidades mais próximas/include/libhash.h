@@ -62,6 +62,12 @@ void desce(theap *heap, int n);
 void sobe(theap *heap, int n);
 void troca(tvizinho *a, tvizinho *b);
 void heap_sort(theap *heap);
+void heap_insere(theap *heap, double distancia, tmunicipio municipio);
+tmunicipio * busca_vizinho(tnode *node, tmunicipio municipio, theap *heap, int h);
+double calcula_distancia(tmunicipio vizinho, tmunicipio municipio);
+tvizinho acessa_max(theap *heap);
+void altera_prioridade(theap *heap, int n, double distancia, tmunicipio municipio);
+
 
 
 

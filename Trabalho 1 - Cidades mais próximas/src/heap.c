@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "../include/libhash.h"
 
 int pai(int n){
@@ -37,7 +38,7 @@ void desce(theap *heap, int n){
         maior = esquerda;
     }
     if(maior != n){
-        troca(&heap->vizinhos[maior], &heap->vizinhos[n]);
+        troca(&(heap->vizinhos[maior]), &(heap->vizinhos[n]));
         desce(heap, maior);
     }
 }
@@ -45,8 +46,8 @@ void desce(theap *heap, int n){
 void sobe(theap *heap, int n){
     int pos_pai = pai(n);
     if(heap->vizinhos->distance > heap->vizinhos[pos_pai].distance){
-        troca(&heap->vizinhos[n], &heap->vizinhos[pos_pai]);
-        sobe(heap->vizinhos, pos_pai);
+        troca(&(heap->vizinhos[n]), &(heap->vizinhos[pos_pai]));
+        sobe(heap, pos_pai);
     }
 }
 
@@ -58,8 +59,37 @@ void troca(tvizinho *a, tvizinho *b){
 
 void heap_sort(theap *heap){
     for(int i = heap->tam - 1; i > 0; i--){
-        troca(&heap->vizinhos[0], &heap->vizinhos[i]);
+        troca(&(heap->vizinhos[0]), &(heap->vizinhos[i]));
         heap->tam--;
         desce(heap, 0);
     }
+}
+
+void heap_insere(theap *heap, double distancia, tmunicipio municipio){
+    if(heap->tam == heap->max){
+        return;
+    }
+    heap->vizinhos[heap->tam].distance = distancia;
+    heap->vizinhos[heap->tam].municipio = municipio;
+    sobe(heap, heap->tam);
+    heap->tam++;
+}
+
+tvizinho acessa_max(theap *heap){
+    return heap->vizinhos[0];
+}
+
+void altera_prioridade(theap *heap, int n, double distancia, tmunicipio municipio){
+    tvizinho aux = heap->vizinhos[n];
+
+    heap->vizinhos[n].distance = distancia;
+    heap->vizinhos[n].municipio = municipio;
+
+    if(heap->vizinhos[n].distance > aux.distance){
+        sobe(heap, n);
+    }
+    if(heap->vizinhos[n].distance < aux.distance){
+        desce(heap, n);
+    }
+
 }

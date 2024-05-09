@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "../include/libhash.h"
 #define MAX 11141
 
@@ -104,8 +105,10 @@ void menu_opcoes(thash h)
         case 2:
             printf("Digite o nome do municipio: ");
             char nome[50];
+            int tam = 0;
             scanf("%s", nome);
-            // aqui vai ter um busca nome
+            busca_nome(&h, nome, &tam);
+            
             break;
         case 3:
             printf("Digite o codigo do municipio: ");
