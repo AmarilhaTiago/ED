@@ -56,9 +56,9 @@ void busca_vizinho(tnode *node, tmunicipio municipio, theap *heap, int h){
             heap_insere(heap, dist, node->municipio);
         }else if(dist < acessa_max(heap).distance){
             altera_prioridade(heap, 0, dist, node->municipio);
+
         }
     }
-
     tnode *proximo = node->esq;
     tnode *contra = node->dir;
 

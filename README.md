@@ -1,5 +1,9 @@
 Trabalho 1 - Cidades mais próximas
 
+Para compilar: gcc hash.c abb.c heap.c main.c -Wall -o main
+
+Depois, é só compilar o main.exe
+
 Tarefa 1: (consulta cidade)
 objetivo: dado o codigo_ibge retorne as informações desta cidade
 descrição: construa um tabela hash com tratamento de colisões utilizando um hash duplo para armazenar todas as cidades brasileiras do link 

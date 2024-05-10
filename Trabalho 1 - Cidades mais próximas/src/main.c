@@ -123,40 +123,7 @@ void menu_opcoes(thash h_ibge, thash h_nome, tarvore *arv)
             }
             apaga_heap(&heap);
             break;
-            // printf("Digite o nome do municipio: ");
-            // char nome[50];
-            // scanf(" %[^\n]", nome);
-            // muni = busca_nome(&h_nome, nome);
-            // printf("Digite quantos vizinhos você deseja procurar: ");
-            // scanf("%d", &n);
-            // constroi_heap(&heap, n);
-            // busca_vizinho(arv->raiz, *muni, &heap, 0);
-            // heap_sort(&heap);
-            // for(int i = 0; i < n; i++){
-            //     printf("_______________________\n");
-            //     printf("Vizinho %d:\n", i + 1);
-            //     printf("Nome do municipio: %s\n", heap.vizinhos[i].municipio.nome);
-            //     printf("Distancia: %f\n", heap.vizinhos[i].distance);
-            // }
-            // apaga_heap(&heap);
-            // break;
         case 3:
-            // printf("Digite o codigo do municipio: ");
-            // scanf("%d", &codigo);
-            // muni = busca_ibge(&h_ibge, codigo);
-            // printf("Digite quantos vizinhos você deseja procurar: ");
-            // scanf("%d", &n);
-            // constroi_heap(&heap, n);
-            // busca_vizinho(arv->raiz, *muni, &heap, 0);
-            // heap_sort(&heap);
-            // for(int i = 0; i < n; i++){
-            //     printf("_______________________\n");
-            //     printf("Vizinho %d:\n", i + 1);
-            //     printf("Nome do municipio: %s\n", heap.vizinhos[i].municipio.nome);
-            //     printf("Distancia: %f\n", heap.vizinhos[i].distance);
-            // }
-            // apaga_heap(&heap);
-            // break;
             printf("Digite o nome do municipio: ");
             char nome[50];
             scanf(" %[^\n]", nome);

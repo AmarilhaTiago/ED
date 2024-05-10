@@ -31,10 +31,10 @@ void desce(theap *heap, int n){
     int direita = filho_dir(n);
     int esquerda = filho_esq(n);
 
-    if(heap->vizinhos[maior].distance < heap->vizinhos[direita].distance && direita < heap->tam){
+    if(direita < heap->tam && heap->vizinhos[maior].distance < heap->vizinhos[direita].distance){
         maior = direita;
     }
-    if(heap->vizinhos[maior].distance < heap->vizinhos[esquerda].distance && esquerda < heap->tam){
+    if(esquerda < heap->tam && heap->vizinhos[maior].distance < heap->vizinhos[esquerda].distance){
         maior = esquerda;
     }
     if(maior != n){
