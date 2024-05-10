@@ -6,13 +6,14 @@
 
 void insere_arvore(tnode **node, tmunicipio municipio, int h){
     if(*node == NULL){
+        // printf("entrei no no nulo\n");
         *node = (tnode *)malloc(sizeof(tnode));
         (*node)->municipio = municipio;
         (*node)->esq = NULL;
         (*node)->dir = NULL;
-        printf("Cidade inserida: %s\n", municipio.nome);
-    }
-    if(h % 2 == 0){
+        // printf("Cidade inserida: %s\n", municipio.nome);
+    }else if(h % 2 == 0){
+        // printf("entrei no else do mod == 0\n");
         if(municipio.latitude < (*node)->municipio.latitude){
             //inserindo na esquerda caso a nova cidade tenha latitude menor que a cidade atual
             insere_arvore(&(*node)->esq, municipio, ++h);
@@ -21,6 +22,7 @@ void insere_arvore(tnode **node, tmunicipio municipio, int h){
             insere_arvore(&(*node)->dir, municipio, ++h);
         }
     }else{
+        // printf("entrei no else do mod != 0\n");
         if(municipio.longitude < (*node)->municipio.longitude){
             //inserindo na esquerda caso a nova cidade tenha longitude menor que a cidade atual
             insere_arvore(&(*node)->esq, municipio, ++h);
@@ -44,9 +46,9 @@ double calcula_distancia(tmunicipio vizinho, tmunicipio municipio){
 }
 
 
-tmunicipio * busca_vizinho(tnode *node, tmunicipio municipio, theap *heap, int h){
+void busca_vizinho(tnode *node, tmunicipio municipio, theap *heap, int h){
     if(node == NULL){
-        return NULL;
+        return;
     }
     double dist = calcula_distancia(node->municipio, municipio);
     if(dist > 0){
@@ -86,10 +88,10 @@ void constroi_arvore(tarvore *arvore){
     arvore->raiz = NULL;
 }
 
-void libera_arvore(tnode *node){
+void apaga_arvore(tnode *node){
     if(node != NULL){
-        libera_arvore(node->esq);
-        libera_arvore(node->dir);
+        apaga_arvore(node->esq);
+        apaga_arvore(node->dir);
         free(node);
     }
 }

@@ -13,7 +13,7 @@ int string_int(char *str) {
         hash += *str;
         str++;
     }
-    return hash;
+    return abs(hash);
 }
 
 int firstHash(int key, thash h){
@@ -37,6 +37,22 @@ int insere_cidade(thash *h, tmunicipio bucket){
     }else{
         while(h->municipios[pos].codigo_ibge != 0){
             pos = hash_duplo(h,++i,bucket.codigo_ibge);
+        }
+        h->municipios[pos] = bucket;
+        h->size +=1;
+    }
+    return EXIT_SUCCESS;
+}
+
+int insere_cidade_nome(thash *h, tmunicipio bucket){
+    int i = 0;
+    int pos = hash_duplo(h, i, string_int(bucket.nome));
+
+    if (h->max == (h->size+1)){
+        return EXIT_FAILURE;
+    }else{
+        while(h->municipios[pos].codigo_ibge != 0){
+            pos = hash_duplo(h,++i, string_int(bucket.nome));
         }
         h->municipios[pos] = bucket;
         h->size +=1;
@@ -73,34 +89,38 @@ tmunicipio * busca_nome(thash *h, char *nome){
     int j = 0;
     int pos = hash_duplo(h, i, string_int(nome));
     tmunicipio **retorno = malloc(sizeof(tmunicipio *) * 7);
-    tmunicipio *municipio = NULL;  
+    retorno[0] = NULL;
     while(h->municipios[pos].codigo_ibge != 0){
-        if(strcmp(h->municipios[pos].nome, nome) == 0){
-            municipio = &h->municipios[pos];  
+        if(strcmp(h->municipios[pos].nome, nome) == 0){ 
             retorno[j++] = &h->municipios[pos];
+
         }
         pos = hash_duplo(h, ++i, string_int(nome));
     }
-    if(municipio == NULL){
+    
+    if(j == 0){
         printf("Cidade não encontrada\n");
         return NULL;
     }else if(j == 1){
-        return municipio;
-    }else if(j > 1){
-
+        return retorno[0];
+    }
         printf("Foram encontradas %d cidades com o nome %s\n", j, nome);
         printf("Opções:\n");
         for(int i = 0; i < j; i++){
-            printf("%d: %s - DDD: %d\n", i + 1, retorno[i]->nome, retorno[i]->ddd);
+            printf("--------------------\n");
+            printf("Opção %d:\n", i + 1);
+            printf("Nome: %s\n", retorno[i]->nome);
+            printf("Código IBGE: %d\n", retorno[i]->codigo_ibge);
+            printf("DDD: %d\n", retorno[i]->ddd);
         }
         printf("Escolha uma opção: ");
-        int x = scanf("%d", &x);
+        int x;
+        scanf("%d", &x);
         if(x > j || x < 1){
             printf("Opção inválida\n");
             return NULL;
         }
         return retorno[x - 1];
-    }
 }
 
 void apaga_hash(thash *h){

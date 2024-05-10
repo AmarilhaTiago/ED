@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include "../include/libhash.h"
-#define MAX 11141
+#define MAX_HASH 11141
 
 
 char *removeChar(char *str) {
@@ -21,11 +21,11 @@ char *removeChar(char *str) {
     return result;
 }
 
-void preenche_municipio(thash *h)
+void preenche_municipio(thash *h_ibge, thash *h_nome, tarvore *arvore)
 {
     tmunicipio *municipio;
     FILE *file;
-    char *path_file = "./json/municipios.json";
+    char *path_file = "../json/municipios.json";
     char line[70];
 
     file = fopen(path_file, "r");
@@ -33,7 +33,6 @@ void preenche_municipio(thash *h)
     {
         printf("Erro na abertura do arquivo\n");
     }
-
     while (fgets(line, sizeof(line), file) != NULL)
     {
         if (strstr(line, "{"))
@@ -60,7 +59,9 @@ void preenche_municipio(thash *h)
             sscanf(line, "%*s \"%[^\"]\"", municipio->fuso_horario);
             strcpy(municipio->fuso_horario, removeChar(municipio->fuso_horario));
 
-            insere_cidade(h, *municipio);
+            insere_cidade(h_ibge, *municipio);
+            insere_cidade_nome(h_nome, *municipio);
+            insere_arvore(&arvore->raiz, *municipio, 0);
         }
     }
     fclose(file);
@@ -68,6 +69,7 @@ void preenche_municipio(thash *h)
 
 void print_dados(tmunicipio *municipio)
 {
+    printf("_______________________\n");
     printf("Codigo IBGE: %d\n", municipio->codigo_ibge);
     printf("Nome: %s\n", municipio->nome);
     printf("Latitude: %f\n", municipio->latitude);
@@ -79,8 +81,11 @@ void print_dados(tmunicipio *municipio)
     printf("Fuso Horario: %s\n", municipio->fuso_horario);
 }
 
-void menu_opcoes(thash h)
+void menu_opcoes(thash h_ibge, thash h_nome, tarvore *arv)
 {
+    tmunicipio *muni;
+    theap heap;
+    int n;
     int x;
     int codigo;
     while (x != 0)
@@ -88,8 +93,8 @@ void menu_opcoes(thash h)
         printf("_______________________\n");
         printf("Escolha uma opcao:\n");
         printf("1 - Buscar por codigo ibge\n");
-        printf("2 - Buscar por nome\n");
-        printf("3 - Busca n Vizinhos\n");
+        printf("2 - Buscar vizinhos por ibge\n");
+        printf("3 - Buscar vizinhos por nome\n");
         printf("0 - Sair\n");
         printf("_______________________\n");
         printf("Digite o numero da opcao: ");
@@ -100,22 +105,79 @@ void menu_opcoes(thash h)
         case 1:
             printf("Digite o codigo do municipio: ");
             scanf("%d", &codigo);
-            print_dados(busca_ibge(&h, codigo));
+            print_dados(busca_ibge(&h_ibge, codigo));
             break;
         case 2:
+        printf("Digite o codigo do municipio: ");
+            scanf("%d", &codigo);
+            muni = busca_ibge(&h_ibge, codigo);
+            printf("Digite quantos vizinhos você deseja procurar: ");
+            scanf("%d", &n);
+            constroi_heap(&heap, n);
+            busca_vizinho(arv->raiz, *muni, &heap, 0);
+            heap_sort(&heap);
+            for(int i = 0; i < n; i++){
+                printf("_______________________\n");
+                printf("Vizinho %d:\n", i + 1);
+                printf("Código IBGE do municipio: %d\n", heap.vizinhos[i].municipio.codigo_ibge);
+            }
+            apaga_heap(&heap);
+            break;
+            // printf("Digite o nome do municipio: ");
+            // char nome[50];
+            // scanf(" %[^\n]", nome);
+            // muni = busca_nome(&h_nome, nome);
+            // printf("Digite quantos vizinhos você deseja procurar: ");
+            // scanf("%d", &n);
+            // constroi_heap(&heap, n);
+            // busca_vizinho(arv->raiz, *muni, &heap, 0);
+            // heap_sort(&heap);
+            // for(int i = 0; i < n; i++){
+            //     printf("_______________________\n");
+            //     printf("Vizinho %d:\n", i + 1);
+            //     printf("Nome do municipio: %s\n", heap.vizinhos[i].municipio.nome);
+            //     printf("Distancia: %f\n", heap.vizinhos[i].distance);
+            // }
+            // apaga_heap(&heap);
+            // break;
+        case 3:
+            // printf("Digite o codigo do municipio: ");
+            // scanf("%d", &codigo);
+            // muni = busca_ibge(&h_ibge, codigo);
+            // printf("Digite quantos vizinhos você deseja procurar: ");
+            // scanf("%d", &n);
+            // constroi_heap(&heap, n);
+            // busca_vizinho(arv->raiz, *muni, &heap, 0);
+            // heap_sort(&heap);
+            // for(int i = 0; i < n; i++){
+            //     printf("_______________________\n");
+            //     printf("Vizinho %d:\n", i + 1);
+            //     printf("Nome do municipio: %s\n", heap.vizinhos[i].municipio.nome);
+            //     printf("Distancia: %f\n", heap.vizinhos[i].distance);
+            // }
+            // apaga_heap(&heap);
+            // break;
             printf("Digite o nome do municipio: ");
             char nome[50];
-            scanf("%s", nome);
-            busca_nome(&h, nome);
-            
-            break;
-        case 3:
-            printf("Digite o codigo do municipio: ");
-            scanf("%d", &codigo);
-            // aqui vai ter um busca vizinho
+            scanf(" %[^\n]", nome);
+            muni = busca_nome(&h_nome, nome);
+            printf("Digite quantos vizinhos você deseja procurar: ");
+            scanf("%d", &n);
+            constroi_heap(&heap, n);
+            busca_vizinho(arv->raiz, *muni, &heap, 0);
+            heap_sort(&heap);
+            for(int i = 0; i < n; i++){
+                printf("_______________________\n");
+                printf("Vizinho %d:\n", i + 1);
+                print_dados(&heap.vizinhos[i].municipio);
+            }
+            apaga_heap(&heap);
             break;
         case 0:
-            apaga_hash(&h);
+            apaga_hash(&h_ibge);
+            apaga_hash(&h_nome);
+            apaga_arvore(arv->raiz);
+            apaga_heap(&heap);
             break;
         default:
             printf("Esta opcao nao existe!\n");
@@ -126,11 +188,16 @@ void menu_opcoes(thash h)
 int main()
 {
 
-    thash h;
+    thash h_ibge;
+    thash h_nome;
+    tarvore *arvore = (tarvore *)malloc(sizeof(tarvore));
+    constroi_arvore(arvore);
+    constroi_hash(&h_ibge, MAX_HASH);
+    constroi_hash(&h_nome, MAX_HASH);
 
-    constroi_hash(&h, MAX);
-    preenche_municipio(&h);
-    menu_opcoes(h);
+    preenche_municipio(&h_ibge, &h_nome, arvore);
+
+    menu_opcoes(h_ibge, h_nome, arvore);
 
     return 0;
 }

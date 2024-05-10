@@ -15,7 +15,7 @@ int filho_dir(int n){
     return 2*n + 2;
 }
 
-void libera_heap(theap *heap){
+void apaga_heap(theap *heap){
     free(heap->vizinhos);
     free(heap);
 }
@@ -45,7 +45,7 @@ void desce(theap *heap, int n){
 
 void sobe(theap *heap, int n){
     int pos_pai = pai(n);
-    if(heap->vizinhos->distance > heap->vizinhos[pos_pai].distance){
+    if(heap->vizinhos[n].distance > heap->vizinhos[pos_pai].distance){
         troca(&(heap->vizinhos[n]), &(heap->vizinhos[pos_pai]));
         sobe(heap, pos_pai);
     }
@@ -91,5 +91,4 @@ void altera_prioridade(theap *heap, int n, double distancia, tmunicipio municipi
     if(heap->vizinhos[n].distance < aux.distance){
         desce(heap, n);
     }
-
 }
