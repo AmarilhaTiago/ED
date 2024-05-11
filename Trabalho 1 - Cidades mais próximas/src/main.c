@@ -81,12 +81,12 @@ void print_dados(tmunicipio *municipio)
     printf("Fuso Horario: %s\n", municipio->fuso_horario);
 }
 
-void menu_opcoes(thash h_ibge, thash h_nome, tarvore *arv)
+void menu_opcoes(thash h_ibge, thash h_nome, tarvore arv)
 {
     tmunicipio *muni;
     theap heap;
     int n;
-    int x;
+    int x = -1;
     int codigo;
     while (x != 0)
     {
@@ -105,45 +105,54 @@ void menu_opcoes(thash h_ibge, thash h_nome, tarvore *arv)
         case 1:
             printf("Digite o codigo do municipio: ");
             scanf("%d", &codigo);
-            print_dados(busca_ibge(&h_ibge, codigo));
+            muni = busca_ibge(&h_ibge, codigo);
+            if(muni != NULL){
+                print_dados(muni);
+            }else{
+                printf("\nCidade não encontrada!\n");
+            }
             break;
         case 2:
         printf("Digite o codigo do municipio: ");
             scanf("%d", &codigo);
             muni = busca_ibge(&h_ibge, codigo);
-            printf("Digite quantos vizinhos você deseja procurar: ");
-            scanf("%d", &n);
-            constroi_heap(&heap, n);
-            busca_vizinho(arv->raiz, *muni, &heap, 0);
-            heap_sort(&heap);
-            for(int i = 0; i < n; i++){
-                printf("_______________________\n");
-                printf("Vizinho %d:\n", i + 1);
-                printf("Código IBGE do municipio: %d\n", heap.vizinhos[i].municipio.codigo_ibge);
+            if(muni != NULL){
+                printf("Digite quantos vizinhos você deseja procurar: ");
+                scanf("%d", &n);
+                constroi_heap(&heap, n);
+                busca_vizinho(arv.raiz, *muni, &heap, 0);
+                heap_sort(&heap);
+                for(int i = 0; i < n; i++){
+                    printf("_______________________\n");
+                    printf("Vizinho %d:\n", i + 1);
+                    printf("Código IBGE do municipio: %d\n", heap.vizinhos[i].municipio.codigo_ibge);
+                }
+                apaga_heap(&heap);
             }
-            apaga_heap(&heap);
             break;
         case 3:
             printf("Digite o nome do municipio: ");
             char nome[50];
             scanf(" %[^\n]", nome);
             muni = busca_nome(&h_nome, nome);
-            printf("Digite quantos vizinhos você deseja procurar: ");
-            scanf("%d", &n);
-            constroi_heap(&heap, n);
-            busca_vizinho(arv->raiz, *muni, &heap, 0);
-            heap_sort(&heap);
-            for(int i = 0; i < n; i++){
-                printf("_______________________\n");
-                printf("Vizinho %d:\n", i + 1);
-                print_dados(&heap.vizinhos[i].municipio);
+            if(muni != NULL){
+                printf("Digite quantos vizinhos você deseja procurar: ");
+                scanf("%d", &n);
+                constroi_heap(&heap, n);
+                busca_vizinho(arv.raiz, *muni, &heap, 0);
+                heap_sort(&heap);
+                for(int i = 0; i < n; i++){
+                    printf("_______________________\n");
+                    printf("Vizinho %d:\n", i + 1);
+                    print_dados(&heap.vizinhos[i].municipio);
+                }
+                apaga_heap(&heap);
             }
-            apaga_heap(&heap);
             break;
         case 0:
             apaga_hash(&h_ibge);
             apaga_hash(&h_nome);
-            apaga_arvore(arv->raiz);
+            apaga_arvore(arv.raiz);
             apaga_heap(&heap);
             break;
         default:
@@ -154,16 +163,20 @@ void menu_opcoes(thash h_ibge, thash h_nome, tarvore *arv)
 
 int main()
 {
-
+    // Inicializações
     thash h_ibge;
     thash h_nome;
-    tarvore *arvore = (tarvore *)malloc(sizeof(tarvore));
-    constroi_arvore(arvore);
+    tarvore arvore;
+
+    // Construções
+    constroi_arvore(&arvore);
     constroi_hash(&h_ibge, MAX_HASH);
     constroi_hash(&h_nome, MAX_HASH);
 
-    preenche_municipio(&h_ibge, &h_nome, arvore);
+    // Chama o parser e preenche as estruturas
+    preenche_municipio(&h_ibge, &h_nome, &arvore);
 
+    //Exibe o menu de opções
     menu_opcoes(h_ibge, h_nome, arvore);
 
     return 0;

@@ -99,7 +99,7 @@ tmunicipio * busca_nome(thash *h, char *nome){
     }
     
     if(j == 0){
-        printf("Cidade não encontrada\n");
+        printf("\nCidade não encontrada\n");
         return NULL;
     }else if(j == 1){
         return retorno[0];

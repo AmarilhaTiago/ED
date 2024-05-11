@@ -15,10 +15,15 @@ int filho_dir(int n){
     return 2*n + 2;
 }
 
-void apaga_heap(theap *heap){
-    free(heap->vizinhos);
-    free(heap);
+void apaga_heap(theap *heap) {
+    if (heap != NULL) {
+        if (heap->vizinhos != NULL) {
+            free(heap->vizinhos);
+        }
+        free(heap);
+    }
 }
+
 
 void constroi_heap(theap *heap, int max){
     heap->vizinhos = (tvizinho *)malloc(max * sizeof(tvizinho));
