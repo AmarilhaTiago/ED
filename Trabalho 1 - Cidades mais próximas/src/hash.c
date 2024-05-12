@@ -7,6 +7,7 @@
 #include "../include/libhash.h"
 
 
+// Função para transformar uma string em um inteiro
 int string_int(char *str) {
     int hash = 0;
     while (*str) {
@@ -16,17 +17,21 @@ int string_int(char *str) {
     return abs(hash);
 }
 
+// Função para calcular o primeiro hash
 int firstHash(int key, thash h){
     return key % h.max;
 }
 
+// Função para calcular o segundo hash, usamos o +1 e (h.max - 1) para garantir que sejam primos entre si e não ser 0
 int secondHash(int key, thash h){
     return 1 + (key % (h.max - 1));
 }
 
+// Função para calcular o hash duplo
 int hash_duplo(thash *hash, int i, int key){
     return (firstHash(key, *hash) + i * secondHash(key, *hash)) % hash->max;
 }
+
 
 int insere_cidade(thash *h, tmunicipio bucket){
     int i = 0;

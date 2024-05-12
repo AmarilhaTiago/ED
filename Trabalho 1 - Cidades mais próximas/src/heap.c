@@ -16,12 +16,7 @@ int filho_dir(int n){
 }
 
 void apaga_heap(theap *heap) {
-    if (heap != NULL) {
-        if (heap->vizinhos != NULL) {
-            free(heap->vizinhos);
-        }
-        free(heap);
-    }
+    free(heap->vizinhos);
 }
 
 

@@ -23,22 +23,28 @@ char *removeChar(char *str) {
 
 void preenche_municipio(thash *h_ibge, thash *h_nome, tarvore *arvore)
 {
+    // Definindo as váriaveis
     tmunicipio *municipio;
     FILE *file;
     char *path_file = "../json/municipios.json";
     char line[70];
 
+    // Abrindo o arquivo
     file = fopen(path_file, "r");
     if (file == NULL)
     {
         printf("Erro na abertura do arquivo\n");
     }
+    // Percorrendo cada linha do arquivo e guardando na variável line
     while (fgets(line, sizeof(line), file) != NULL)
     {
+        // Verifica se a linha contém uma chave, o que indica o início de um município
         if (strstr(line, "{"))
         {
+            // Alocando memória para a variável municipio
             municipio = (tmunicipio *)malloc(sizeof(tmunicipio));
 
+            // Lendo as informações do município
             fgets(line, sizeof(line), file);
             sscanf(line, "    \"codigo_ibge\": %d,", &municipio->codigo_ibge);
             fgets(line, sizeof(line), file);
@@ -59,11 +65,13 @@ void preenche_municipio(thash *h_ibge, thash *h_nome, tarvore *arvore)
             sscanf(line, "%*s \"%[^\"]\"", municipio->fuso_horario);
             strcpy(municipio->fuso_horario, removeChar(municipio->fuso_horario));
 
+            // Inserindo o município nas estruturas
             insere_cidade(h_ibge, *municipio);
             insere_cidade_nome(h_nome, *municipio);
             insere_arvore(&arvore->raiz, *municipio, 0);
         }
     }
+    // Fechando o arquivo
     fclose(file);
 }
 
@@ -125,6 +133,7 @@ void menu_opcoes(thash h_ibge, thash h_nome, tarvore arv)
                 for(int i = 0; i < n; i++){
                     printf("_______________________\n");
                     printf("Vizinho %d:\n", i + 1);
+                    printf("Distancia: %f km\n", sqrt(heap.vizinhos[i].distance) * 100);
                     printf("Código IBGE do municipio: %d\n", heap.vizinhos[i].municipio.codigo_ibge);
                 }
                 apaga_heap(&heap);
@@ -144,6 +153,8 @@ void menu_opcoes(thash h_ibge, thash h_nome, tarvore arv)
                 for(int i = 0; i < n; i++){
                     printf("_______________________\n");
                     printf("Vizinho %d:\n", i + 1);
+                    printf("Distancia: %f km\n", sqrt(heap.vizinhos[i].distance) * 100);
+                    printf("Dados do vizinho %d: \n", i + 1);
                     print_dados(&heap.vizinhos[i].municipio);
                 }
                 apaga_heap(&heap);
