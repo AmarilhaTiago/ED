@@ -1,8 +1,12 @@
 Trabalho 1 - Cidades mais próximas
 
-Para compilar: gcc hash.c abb.c heap.c main.c -Wall -o main
+Para compilar no Windows: gcc hash.c abb.c heap.c main.c -Wall -o main
 
-Depois, é só compilar o main.exe
+Para compilar no Linux: gcc hash.c abb.c heap. main.c -Wall -o main -lm
+
+Para executar no Windows: ./main.exe
+
+Para executar no Linux: ./main
 
 Tarefa 1: (consulta cidade)
 objetivo: dado o codigo_ibge retorne as informações desta cidade
