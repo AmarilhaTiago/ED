@@ -137,6 +137,8 @@ void menu_opcoes(thash h_ibge, thash h_nome, tarvore arv)
                     printf("Código IBGE do municipio: %d\n", heap.vizinhos[i].municipio.codigo_ibge);
                 }
                 apaga_heap(&heap);
+            }else{
+                printf("\nCidade não encontrada!\n");
             }
             break;
         case 3:
@@ -164,7 +166,6 @@ void menu_opcoes(thash h_ibge, thash h_nome, tarvore arv)
             apaga_hash(&h_ibge);
             apaga_hash(&h_nome);
             apaga_arvore(arv.raiz);
-            apaga_heap(&heap);
             break;
         default:
             printf("Esta opcao nao existe!\n");

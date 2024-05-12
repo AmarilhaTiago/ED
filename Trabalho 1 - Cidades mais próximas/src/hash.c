@@ -93,7 +93,7 @@ tmunicipio * busca_nome(thash *h, char *nome){
     int i = 0;
     int j = 0;
     int pos = hash_duplo(h, i, string_int(nome));
-    tmunicipio **retorno = malloc(sizeof(tmunicipio *) * 7);
+    tmunicipio **retorno = malloc(sizeof(tmunicipio *) * 7); 
     retorno[0] = NULL;
     while(h->municipios[pos].codigo_ibge != 0){
         if(strcmp(h->municipios[pos].nome, nome) == 0){ 
