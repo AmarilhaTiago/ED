@@ -7,7 +7,8 @@
 
 
 char *removeChar(char *str) {
-    char *result = malloc(strlen(str) + 1);
+    int len = strlen(str);
+    char *result = malloc(len + 1);
     int i, j = 0;
 
     for (i = 0; str[i] != '\0'; i++) {
@@ -18,6 +19,8 @@ char *removeChar(char *str) {
     }
     result[j] = '\0';
 
+    // char *resultado = strdup(result);
+    // free(result);
     return result;
 }
 
@@ -28,6 +31,7 @@ void preenche_municipio(thash *h_ibge, thash *h_nome, tarvore *arvore)
     FILE *file;
     char *path_file = "../json/municipios.json";
     char line[70];
+    char *fuso = NULL;
 
     // Abrindo o arquivo
     file = fopen(path_file, "r");
@@ -63,12 +67,14 @@ void preenche_municipio(thash *h_ibge, thash *h_nome, tarvore *arvore)
             sscanf(line, "    \"ddd\": %d,", &municipio->ddd);
             fgets(line, sizeof(line), file);
             sscanf(line, "%*s \"%[^\"]\"", municipio->fuso_horario);
-            strcpy(municipio->fuso_horario, removeChar(municipio->fuso_horario));
-
+            fuso = removeChar(municipio->fuso_horario);
+            strcpy(municipio->fuso_horario, fuso);
+            free(fuso);
             // Inserindo o município nas estruturas
             insere_cidade(h_ibge, *municipio);
             insere_cidade_nome(h_nome, *municipio);
             insere_arvore(&arvore->raiz, *municipio, 0);
+            free(municipio);
         }
     }
     // Fechando o arquivo

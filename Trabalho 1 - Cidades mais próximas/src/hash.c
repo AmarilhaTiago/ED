@@ -89,7 +89,7 @@ tmunicipio * busca_ibge(thash *h, int key){
     return ret;
 }
 
-tmunicipio * busca_nome(thash *h, char *nome){
+tmunicipio * busca_nome(thash *h, char *nome) {
     int i = 0;
     int j = 0;
     int pos = hash_duplo(h, i, string_int(nome));
@@ -98,35 +98,44 @@ tmunicipio * busca_nome(thash *h, char *nome){
     while(h->municipios[pos].codigo_ibge != 0){
         if(strcmp(h->municipios[pos].nome, nome) == 0){ 
             retorno[j++] = &h->municipios[pos];
-
         }
         pos = hash_duplo(h, ++i, string_int(nome));
     }
     
     if(j == 0){
         printf("\nCidade não encontrada\n");
+        free(retorno);
         return NULL;
-    }else if(j == 1){
-        return retorno[0];
+    } else if(j == 1){
+        tmunicipio *result = retorno[0];
+        free(retorno);
+        return result;
     }
-        printf("Foram encontradas %d cidades com o nome %s\n", j, nome);
-        printf("Opções:\n");
-        for(int i = 0; i < j; i++){
-            printf("--------------------\n");
-            printf("Opção %d:\n", i + 1);
-            printf("Nome: %s\n", retorno[i]->nome);
-            printf("Código IBGE: %d\n", retorno[i]->codigo_ibge);
-            printf("DDD: %d\n", retorno[i]->ddd);
-        }
-        printf("Escolha uma opção: ");
-        int x;
-        scanf("%d", &x);
-        if(x > j || x < 1){
-            printf("Opção inválida\n");
-            return NULL;
-        }
-        return retorno[x - 1];
+    
+    printf("Foram encontradas %d cidades com o nome %s\n", j, nome);
+    printf("Opções:\n");
+    for(int i = 0; i < j; i++){
+        printf("--------------------\n");
+        printf("Opção %d:\n", i + 1);
+        printf("Nome: %s\n", retorno[i]->nome);
+        printf("Código IBGE: %d\n", retorno[i]->codigo_ibge);
+        printf("DDD: %d\n", retorno[i]->ddd);
+    }
+    
+    printf("Escolha uma opção: ");
+    int x;
+    scanf("%d", &x);
+    if(x > j || x < 1){
+        printf("Opção inválida\n");
+        free(retorno);
+        return NULL;
+    }
+    
+    tmunicipio *result = retorno[x - 1];
+    free(retorno);
+    return result;
 }
+
 
 void apaga_hash(thash *h){
     free(h->municipios);
